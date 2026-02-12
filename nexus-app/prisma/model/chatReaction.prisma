@@ -1,0 +1,10 @@
+model ChatReaction{
+    id String @id @default(uuid())
+    reactor User @relation("reactionChat", fields: [reactorId], references:[id])
+    reactorId String
+    message Chat @relation("reactedChat", fields: [messageId], references: [id])
+    messageId String
+    emoji String
+    isDeleted Boolean @default(false)
+    createdAt DateTime @default(now())
+}

@@ -1,0 +1,7 @@
+model CountryCode {
+  id            Int   @id @default(autoincrement())
+  countryName  String @unique
+  countryCode  String @unique
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+}

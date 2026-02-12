@@ -1,0 +1,16 @@
+model User {
+  id        String  @id @default(uuid())
+  countryCode String 
+  mobile    String   
+  email     String?
+  name      String?
+  lastName      String?
+  profilePicture String?
+  sentMessages     Chat[] @relation("SentMessages")
+  receivedMessages      Chat[] @relation("ReceivedMessages")
+  contacts      UserContact[]
+  linkedContacts  UserContact[] @relation("LinkedUser")
+  chatReactions ChatReaction[] @relation("reactionChat")
+  isDeleted Boolean @default(false)
+  createdAt DateTime @default(now())
+}

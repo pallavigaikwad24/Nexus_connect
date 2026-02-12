@@ -1,0 +1,69 @@
+model ChatReaction {
+  id        String   @id @default(uuid())
+  reactor   User     @relation("reactionChat", fields: [reactorId], references: [id])
+  reactorId String
+  message   Chat     @relation("reactedChat", fields: [messageId], references: [id])
+  messageId String
+  emoji     String
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Chat {
+  id            String         @id @default(uuid())
+  content       Json
+  sender        User           @relation("SentMessages", fields: [senderId], references: [id])
+  senderId      String
+  receiver      User           @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  receiverId    String
+  chatReactions ChatReaction[] @relation("reactedChat")
+  isDeleted     Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+}
+
+model CountryCode {
+  id          Int      @id @default(autoincrement())
+  countryName String   @unique
+  countryCode String   @unique
+  isDeleted   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model UserContact {
+  id           String   @id @default(uuid())
+  ownerUserId  String
+  ownerUser    User     @relation(fields: [ownerUserId], references: [id])
+  phone        String
+  name         String?
+  linkedUserId String?
+  linkedUser   User?    @relation("LinkedUser", fields: [linkedUserId], references: [id])
+  isDeleted    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+}
+
+model User {
+  id               String         @id @default(uuid())
+  countryCode      String
+  mobile           String
+  email            String?
+  name             String?
+  lastName         String?
+  profilePicture   String?
+  sentMessages     Chat[]         @relation("SentMessages")
+  receivedMessages Chat[]         @relation("ReceivedMessages")
+  contacts         UserContact[]
+  linkedContacts   UserContact[]  @relation("LinkedUser")
+  chatReactions    ChatReaction[] @relation("reactionChat")
+  isDeleted        Boolean        @default(false)
+  createdAt        DateTime       @default(now())
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}

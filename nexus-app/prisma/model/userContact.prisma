@@ -1,0 +1,11 @@
+model UserContact {
+  id            String   @id @default(uuid())
+  ownerUserId   String
+  ownerUser     User     @relation(fields: [ownerUserId], references: [id])
+  phone         String
+  name          String?
+  linkedUserId  String?
+  linkedUser    User?    @relation("LinkedUser", fields: [linkedUserId], references: [id])
+  isDeleted     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+}
